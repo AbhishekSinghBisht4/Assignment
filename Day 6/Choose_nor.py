@@ -1,0 +1,29 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+a=pd.read_csv("Iris.csv")
+#print(a.head())
+
+X = a.drop("Species", axis=1) 
+y = a["Species"]         
+
+scaler = StandardScaler()
+X_normalized = scaler.fit_transform(X)
+
+X_normalized = pd.DataFrame(X_normalized, columns=X.columns)
+
+# View normalized data
+#print(X_normalized.head())
+X_train, X_test, y_train, y_test = train_test_split(
+    X_normalized, y, test_size=0.2, random_state=42
+)
+knn = KNeighborsClassifier(n_neighbors=5)
+
+knn.fit(X_normalized, y)
+y_pred = knn.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+
+print("KNN Accuracy:", accuracy)
